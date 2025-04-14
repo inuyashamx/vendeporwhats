@@ -84,6 +84,17 @@ interface User {
   nombre: string | null
 }
 
+interface Shop {
+  id: string
+  user_id: string
+  nombre: string
+  slug: string
+  descripcion: string | null
+  logo_url: string | null
+  color_tema: string | null
+  created_at: string
+}
+
 interface Pedido {
   id: number
   producto: string
@@ -141,6 +152,18 @@ const validarYCrearUsuario = async () => {
     if (error) {
       console.error('Error al crear usuario:', error)
     }
+  }
+
+  // Verificar si el usuario tiene una tienda
+  const { data: shop } = await supabase
+    .from('shops')
+    .select('*')
+    .eq('user_id', user.id)
+    .single()
+
+  if (!shop) {
+    navigateTo('/dashboard/shop/create')
+    return
   }
 }
 
