@@ -1,8 +1,8 @@
 <template>
-  <v-container class="fill-height">
+  <v-container class="fill-height px-4">
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="6" lg="4">
-        <BaseCard title="Crear Cuenta">
+        <BaseCard title="Crear Cuenta" class="pa-4 pa-sm-6">
           <v-form @submit.prevent="handleRegister">
             <v-text-field
               v-model="email"
@@ -11,6 +11,8 @@
               required
               :error-messages="emailError"
               autocomplete="username"
+              class="mb-4"
+              density="comfortable"
             />
 
             <v-text-field
@@ -20,6 +22,8 @@
               required
               :error-messages="passwordError"
               autocomplete="new-password"
+              class="mb-4"
+              density="comfortable"
             />
 
             <v-text-field
@@ -29,12 +33,15 @@
               required
               :error-messages="confirmPasswordError"
               autocomplete="new-password"
+              class="mb-4"
+              density="comfortable"
             />
 
             <v-alert
               v-if="error"
               type="error"
               class="mb-4"
+              density="comfortable"
             >
               {{ error }}
             </v-alert>
@@ -43,6 +50,7 @@
               v-if="success"
               type="success"
               class="mb-4"
+              density="comfortable"
             >
               {{ success }}
             </v-alert>
@@ -53,6 +61,7 @@
               block
               :loading="loading"
               class="mb-4"
+              size="large"
             >
               Crear Cuenta
             </v-btn>
@@ -67,6 +76,7 @@
               class="mb-3"
               color="red"
               prepend-icon="mdi-google"
+              size="large"
             >
               Google
             </v-btn>
@@ -79,12 +89,13 @@
               class="mb-4"
               color="blue"
               prepend-icon="mdi-facebook"
+              size="large"
             >
               Facebook
             </v-btn>
 
             <div class="text-center mt-4">
-              <nuxt-link to="/auth/login">
+              <nuxt-link to="/auth/login" class="text-decoration-none">
                 ¿Ya tienes cuenta? Inicia sesión aquí
               </nuxt-link>
             </div>

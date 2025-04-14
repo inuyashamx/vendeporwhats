@@ -1,61 +1,63 @@
 <template>
-  <div>
-    <h1 class="text-h4 mb-6">Dashboard</h1>
+  <div class="pa-4">
+    <h1 class="text-h4 text-md-h3 mb-6">Dashboard</h1>
     
     <v-row>
       <!-- Resumen de Estadísticas -->
-      <v-col cols="12" md="3">
-        <BaseCard title="Productos">
-          <div class="text-h4 text-center">{{ estadisticas.productos }}</div>
+      <v-col cols="6" sm="6" md="3" class="mb-4">
+        <BaseCard title="Productos" class="h-100">
+          <div class="text-h5 text-md-h4 text-center">{{ estadisticas.productos }}</div>
         </BaseCard>
       </v-col>
-      <v-col cols="12" md="3">
-        <BaseCard title="Pedidos Hoy">
-          <div class="text-h4 text-center">{{ estadisticas.pedidosHoy }}</div>
+      <v-col cols="6" sm="6" md="3" class="mb-4">
+        <BaseCard title="Pedidos Hoy" class="h-100">
+          <div class="text-h5 text-md-h4 text-center">{{ estadisticas.pedidosHoy }}</div>
         </BaseCard>
       </v-col>
-      <v-col cols="12" md="3">
-        <BaseCard title="Visitas">
-          <div class="text-h4 text-center">{{ estadisticas.visitas }}</div>
+      <v-col cols="6" sm="6" md="3" class="mb-4">
+        <BaseCard title="Visitas" class="h-100">
+          <div class="text-h5 text-md-h4 text-center">{{ estadisticas.visitas }}</div>
         </BaseCard>
       </v-col>
-      <v-col cols="12" md="3">
-        <BaseCard title="Conversiones">
-          <div class="text-h4 text-center">{{ estadisticas.conversiones }}%</div>
+      <v-col cols="6" sm="6" md="3" class="mb-4">
+        <BaseCard title="Conversiones" class="h-100">
+          <div class="text-h5 text-md-h4 text-center">{{ estadisticas.conversiones }}%</div>
         </BaseCard>
       </v-col>
 
       <!-- Gráficos y Tablas -->
-      <v-col cols="12" md="8">
+      <v-col cols="12" md="8" class="mb-4">
         <BaseCard title="Pedidos Recientes">
-          <v-table>
-            <thead>
-              <tr>
-                <th>Producto</th>
-                <th>Cliente</th>
-                <th>Estado</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="pedido in pedidosRecientes" :key="pedido.id">
-                <td>{{ pedido.producto }}</td>
-                <td>{{ pedido.cliente }}</td>
-                <td>
-                  <v-chip :color="getEstadoColor(pedido.estado)">
-                    {{ pedido.estado }}
-                  </v-chip>
-                </td>
-                <td>\${{ pedido.total }}</td>
-              </tr>
-            </tbody>
-          </v-table>
+          <div class="overflow-x-auto">
+            <v-table density="comfortable">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Cliente</th>
+                  <th>Estado</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="pedido in pedidosRecientes" :key="pedido.id">
+                  <td>{{ pedido.producto }}</td>
+                  <td>{{ pedido.cliente }}</td>
+                  <td>
+                    <v-chip :color="getEstadoColor(pedido.estado)" size="small">
+                      {{ pedido.estado }}
+                    </v-chip>
+                  </td>
+                  <td>\${{ pedido.total }}</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </div>
         </BaseCard>
       </v-col>
 
-      <v-col cols="12" md="4">
+      <v-col cols="12" md="4" class="mb-4">
         <BaseCard title="Productos Populares">
-          <v-list>
+          <v-list density="comfortable">
             <v-list-item
               v-for="producto in productosPopulares"
               :key="producto.id"
@@ -63,7 +65,7 @@
               :subtitle="`${producto.ventas} ventas`"
             >
               <template v-slot:prepend>
-                <v-avatar>
+                <v-avatar size="40">
                   <v-img :src="producto.imagen" />
                 </v-avatar>
               </template>
