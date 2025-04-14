@@ -79,6 +79,8 @@
 </template>
 
 <script setup lang="ts">
+import { supabaseConfig, tables } from '~/config/supabase'
+
 const supabase = useSupabaseClient()
 const router = useRouter()
 
@@ -91,6 +93,14 @@ const facebookLoading = ref(false)
 const error = ref('')
 const emailError = ref('')
 const passwordError = ref('')
+
+// Definir la interfaz para el tipo de usuario
+interface Usuario {
+  id: string
+  email: string
+  nombre: string
+  created_at?: string
+}
 
 // Métodos
 const validateForm = () => {
@@ -111,6 +121,32 @@ const validateForm = () => {
   return isValid
 }
 
+// Función auxiliar para crear usuario
+const createUser = async (userData: { id: string, email: string, nombre: string }) => {
+  try {
+    const { data: sessionData } = await supabase.auth.getSession()
+    const response = await fetch(`${supabaseConfig.url}/rest/v1/${tables.users}`, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseConfig.key,
+        'Authorization': `Bearer ${sessionData.session?.access_token}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(userData)
+    })
+
+    if (!response.ok) {
+      throw new Error(`Error al crear usuario: ${response.statusText}`)
+    }
+
+    console.log('Usuario creado exitosamente')
+  } catch (error) {
+    console.error('Error al crear usuario:', error)
+  }
+}
+
+// Modificar el handleLogin
 const handleLogin = async () => {
   if (!validateForm()) return
 

@@ -39,6 +39,14 @@
               {{ error }}
             </v-alert>
 
+            <v-alert
+              v-if="success"
+              type="success"
+              class="mb-4"
+            >
+              {{ success }}
+            </v-alert>
+
             <v-btn
               type="submit"
               color="primary"
@@ -99,6 +107,7 @@ const loading = ref(false)
 const googleLoading = ref(false)
 const facebookLoading = ref(false)
 const error = ref('')
+const success = ref('')
 const emailError = ref('')
 const passwordError = ref('')
 const confirmPasswordError = ref('')
@@ -138,7 +147,6 @@ const handleRegister = async () => {
   error.value = ''
 
   try {
-    // Registrar usuario
     const { error: authError } = await supabase.auth.signUp({
       email: email.value,
       password: password.value,
@@ -146,9 +154,12 @@ const handleRegister = async () => {
 
     if (authError) throw authError
 
-    router.push('/dashboard')
+    // Mostrar mensaje de éxito
+    error.value = ''
+    success.value = 'Te hemos enviado un correo de confirmación. Por favor, revisa tu bandeja de entrada y sigue las instrucciones para activar tu cuenta.'
   } catch (e: any) {
     error.value = e.message || 'Error al crear la cuenta'
+    success.value = ''
   } finally {
     loading.value = false
   }
