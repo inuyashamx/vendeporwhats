@@ -4,65 +4,29 @@
       <v-col cols="12" sm="8" md="6" lg="4">
         <BaseCard title="Iniciar Sesión">
           <v-form @submit.prevent="handleLogin">
-            <v-text-field
-              v-model="email"
-              label="Correo electrónico"
-              type="email"
-              required
-              :error-messages="emailError"
-              autocomplete="username"
-            />
+            <v-text-field v-model="email" label="Correo electrónico" type="email" required :error-messages="emailError"
+              autocomplete="username" />
 
-            <v-text-field
-              v-model="password"
-              label="Contraseña"
-              type="password"
-              required
-              :error-messages="passwordError"
-              autocomplete="current-password"
-            />
+            <v-text-field v-model="password" label="Contraseña" type="password" required :error-messages="passwordError"
+              autocomplete="current-password" />
 
-            <v-alert
-              v-if="error"
-              type="error"
-              class="mb-4"
-            >
+            <v-alert v-if="error" type="error" class="mb-4">
               {{ error }}
             </v-alert>
 
-            <v-btn
-              type="submit"
-              color="primary"
-              block
-              :loading="loading"
-              class="mb-4"
-            >
+            <v-btn type="submit" color="primary" block :loading="loading" class="mb-4">
               Iniciar Sesión
             </v-btn>
 
             <v-divider class="my-4">o continúa con</v-divider>
 
-            <v-btn
-              block
-              variant="outlined"
-              :loading="googleLoading"
-              @click="handleGoogleLogin"
-              class="mb-3"
-              color="red"
-              prepend-icon="mdi-google"
-            >
+            <v-btn block variant="outlined" :loading="googleLoading" @click="handleGoogleLogin" class="mb-3" color="red"
+              prepend-icon="mdi-google">
               Google
             </v-btn>
 
-            <v-btn
-              block
-              variant="outlined"
-              :loading="facebookLoading"
-              @click="handleFacebookLogin"
-              class="mb-4"
-              color="blue"
-              prepend-icon="mdi-facebook"
-            >
+            <v-btn block variant="outlined" :loading="facebookLoading" @click="handleFacebookLogin" class="mb-4"
+              color="blue" prepend-icon="mdi-facebook">
               Facebook
             </v-btn>
 
@@ -79,7 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import { supabaseConfig, tables } from '~/config/supabase'
 
 const supabase = useSupabaseClient()
 const router = useRouter()
@@ -93,14 +56,6 @@ const facebookLoading = ref(false)
 const error = ref('')
 const emailError = ref('')
 const passwordError = ref('')
-
-// Definir la interfaz para el tipo de usuario
-interface Usuario {
-  id: string
-  email: string
-  nombre: string
-  created_at?: string
-}
 
 // Métodos
 const validateForm = () => {
@@ -119,31 +74,6 @@ const validateForm = () => {
   }
 
   return isValid
-}
-
-// Función auxiliar para crear usuario
-const createUser = async (userData: { id: string, email: string, nombre: string }) => {
-  try {
-    const { data: sessionData } = await supabase.auth.getSession()
-    const response = await fetch(`${supabaseConfig.url}/rest/v1/${tables.users}`, {
-      method: 'POST',
-      headers: {
-        'apikey': supabaseConfig.key,
-        'Authorization': `Bearer ${sessionData.session?.access_token}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify(userData)
-    })
-
-    if (!response.ok) {
-      throw new Error(`Error al crear usuario: ${response.statusText}`)
-    }
-
-    console.log('Usuario creado exitosamente')
-  } catch (error) {
-    console.error('Error al crear usuario:', error)
-  }
 }
 
 // Modificar el handleLogin
@@ -220,4 +150,4 @@ watch(user, (newUser) => {
 definePageMeta({
   layout: 'default'
 })
-</script> 
+</script>
