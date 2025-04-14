@@ -10,6 +10,7 @@
               type="email"
               required
               :error-messages="emailError"
+              autocomplete="username"
             />
 
             <v-text-field
@@ -18,6 +19,7 @@
               type="password"
               required
               :error-messages="passwordError"
+              autocomplete="current-password"
             />
 
             <v-alert
@@ -33,8 +35,35 @@
               color="primary"
               block
               :loading="loading"
+              class="mb-4"
             >
               Iniciar Sesión
+            </v-btn>
+
+            <v-divider class="my-4">o continúa con</v-divider>
+
+            <v-btn
+              block
+              variant="outlined"
+              :loading="googleLoading"
+              @click="handleGoogleLogin"
+              class="mb-3"
+              color="red"
+              prepend-icon="mdi-google"
+            >
+              Google
+            </v-btn>
+
+            <v-btn
+              block
+              variant="outlined"
+              :loading="facebookLoading"
+              @click="handleFacebookLogin"
+              class="mb-4"
+              color="blue"
+              prepend-icon="mdi-facebook"
+            >
+              Facebook
             </v-btn>
 
             <div class="text-center mt-4">
@@ -57,6 +86,8 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
+const googleLoading = ref(false)
+const facebookLoading = ref(false)
 const error = ref('')
 const emailError = ref('')
 const passwordError = ref('')
@@ -99,6 +130,46 @@ const handleLogin = async () => {
     error.value = e.message || 'Error al iniciar sesión'
   } finally {
     loading.value = false
+  }
+}
+
+const handleGoogleLogin = async () => {
+  googleLoading.value = true
+  error.value = ''
+
+  try {
+    const { error: authError } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    })
+
+    if (authError) throw authError
+  } catch (e: any) {
+    error.value = e.message || 'Error al iniciar sesión con Google'
+  } finally {
+    googleLoading.value = false
+  }
+}
+
+const handleFacebookLogin = async () => {
+  facebookLoading.value = true
+  error.value = ''
+
+  try {
+    const { error: authError } = await supabase.auth.signInWithOAuth({
+      provider: 'facebook',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    })
+
+    if (authError) throw authError
+  } catch (e: any) {
+    error.value = e.message || 'Error al iniciar sesión con Facebook'
+  } finally {
+    facebookLoading.value = false
   }
 }
 

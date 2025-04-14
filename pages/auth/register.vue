@@ -10,6 +10,7 @@
               type="email"
               required
               :error-messages="emailError"
+              autocomplete="username"
             />
 
             <v-text-field
@@ -18,6 +19,7 @@
               type="password"
               required
               :error-messages="passwordError"
+              autocomplete="new-password"
             />
 
             <v-text-field
@@ -26,21 +28,7 @@
               type="password"
               required
               :error-messages="confirmPasswordError"
-            />
-
-            <v-text-field
-              v-model="nombreTienda"
-              label="Nombre de tu tienda"
-              required
-              :error-messages="nombreTiendaError"
-            />
-
-            <v-text-field
-              v-model="whatsapp"
-              label="WhatsApp (con código de país)"
-              required
-              :error-messages="whatsappError"
-              placeholder="Ej: 5491112345678"
+              autocomplete="new-password"
             />
 
             <v-alert
@@ -56,8 +44,35 @@
               color="primary"
               block
               :loading="loading"
+              class="mb-4"
             >
               Crear Cuenta
+            </v-btn>
+
+            <v-divider class="my-4">o regístrate con</v-divider>
+
+            <v-btn
+              block
+              variant="outlined"
+              :loading="googleLoading"
+              @click="handleGoogleLogin"
+              class="mb-3"
+              color="red"
+              prepend-icon="mdi-google"
+            >
+              Google
+            </v-btn>
+
+            <v-btn
+              block
+              variant="outlined"
+              :loading="facebookLoading"
+              @click="handleFacebookLogin"
+              class="mb-4"
+              color="blue"
+              prepend-icon="mdi-facebook"
+            >
+              Facebook
             </v-btn>
 
             <div class="text-center mt-4">
@@ -80,15 +95,13 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
-const nombreTienda = ref('')
-const whatsapp = ref('')
 const loading = ref(false)
+const googleLoading = ref(false)
+const facebookLoading = ref(false)
 const error = ref('')
 const emailError = ref('')
 const passwordError = ref('')
 const confirmPasswordError = ref('')
-const nombreTiendaError = ref('')
-const whatsappError = ref('')
 
 // Métodos
 const validateForm = () => {
@@ -96,8 +109,6 @@ const validateForm = () => {
   emailError.value = ''
   passwordError.value = ''
   confirmPasswordError.value = ''
-  nombreTiendaError.value = ''
-  whatsappError.value = ''
 
   if (!email.value) {
     emailError.value = 'El correo electrónico es requerido'
@@ -117,19 +128,6 @@ const validateForm = () => {
     isValid = false
   }
 
-  if (!nombreTienda.value) {
-    nombreTiendaError.value = 'El nombre de la tienda es requerido'
-    isValid = false
-  }
-
-  if (!whatsapp.value) {
-    whatsappError.value = 'El número de WhatsApp es requerido'
-    isValid = false
-  } else if (!/^\d+$/.test(whatsapp.value)) {
-    whatsappError.value = 'El número debe contener solo dígitos'
-    isValid = false
-  }
-
   return isValid
 }
 
@@ -140,36 +138,59 @@ const handleRegister = async () => {
   error.value = ''
 
   try {
-    // 1. Registrar usuario
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    // Registrar usuario
+    const { error: authError } = await supabase.auth.signUp({
       email: email.value,
       password: password.value,
     })
 
     if (authError) throw authError
 
-    // 2. Crear tienda
-    const slug = nombreTienda.value
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-
-    const { error: tiendaError } = await supabase
-      .from('tiendas')
-      .insert({
-        user_id: authData.user?.id,
-        nombre: nombreTienda.value,
-        slug,
-        whatsapp: whatsapp.value,
-      })
-
-    if (tiendaError) throw tiendaError
-
     router.push('/dashboard')
   } catch (e: any) {
     error.value = e.message || 'Error al crear la cuenta'
   } finally {
     loading.value = false
+  }
+}
+
+const handleGoogleLogin = async () => {
+  googleLoading.value = true
+  error.value = ''
+
+  try {
+    const { error: authError } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    })
+
+    if (authError) throw authError
+  } catch (e: any) {
+    error.value = e.message || 'Error al registrarse con Google'
+  } finally {
+    googleLoading.value = false
+  }
+}
+
+const handleFacebookLogin = async () => {
+  facebookLoading.value = true
+  error.value = ''
+
+  try {
+    const { error: authError } = await supabase.auth.signInWithOAuth({
+      provider: 'facebook',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`
+      }
+    })
+
+    if (authError) throw authError
+  } catch (e: any) {
+    error.value = e.message || 'Error al registrarse con Facebook'
+  } finally {
+    facebookLoading.value = false
   }
 }
 
@@ -183,4 +204,5 @@ watch(user, (newUser) => {
 
 definePageMeta({
   layout: 'default'
-})</script> 
+})
+</script> 
