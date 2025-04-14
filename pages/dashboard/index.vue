@@ -78,6 +78,27 @@
 <script setup lang="ts">
 const supabase = useSupabaseClient()
 
+interface User {
+  id: string
+  email: string
+  nombre: string | null
+}
+
+interface Pedido {
+  id: number
+  producto: string
+  cliente: string
+  estado: string
+  total: number
+}
+
+interface Producto {
+  id: number
+  nombre: string
+  ventas: number
+  imagen: string
+}
+
 // Estados
 const estadisticas = ref({
   productos: 0,
@@ -86,8 +107,42 @@ const estadisticas = ref({
   conversiones: 0
 })
 
-const pedidosRecientes = ref([])
-const productosPopulares = ref([])
+const pedidosRecientes = ref<Pedido[]>([])
+const productosPopulares = ref<Producto[]>([])
+
+// Validar y crear usuario si no existe
+const validarYCrearUsuario = async () => {
+  const { data: { user } } = await supabase.auth.getUser()
+  
+  if (!user) {
+    navigateTo('/login')
+    return
+  }
+
+  // Verificar si el usuario existe en la tabla users
+  const { data: existingUser } = await supabase
+    .from('users')
+    .select('*')
+    .eq('id', user.id)
+    .single()
+
+  if (!existingUser) {
+    // Crear nuevo usuario en la tabla users
+    const { error } = await supabase
+      .from('users')
+      .insert<Partial<User>>([
+        {
+          id: user.id,
+          email: user.email || '',
+          nombre: user.user_metadata?.nombre || null
+        }
+      ])
+
+    if (error) {
+      console.error('Error al crear usuario:', error)
+    }
+  }
+}
 
 // Métodos
 const cargarEstadisticas = async () => {
@@ -128,7 +183,8 @@ const getEstadoColor = (estado: string) => {
 }
 
 // Cargar datos al montar
-onMounted(() => {
+onMounted(async () => {
+  await validarYCrearUsuario()
   cargarEstadisticas()
   cargarPedidosRecientes()
   cargarProductosPopulares()
