@@ -161,6 +161,8 @@ interface Shop {
   created_at?: string
 }
 
+type ShopInsert = Omit<Shop, 'id' | 'created_at'>
+
 const form = ref()
 const loading = ref(false)
 const logoFile = ref<File | null>(null)
@@ -221,10 +223,12 @@ const crearTienda = async () => {
     if (!user) throw new Error('Usuario no autenticado')
 
     // Preparar datos de la tienda
-    const tiendaData: Shop = {
+    const tiendaData: ShopInsert = {
       ...tienda.value,
       user_id: user.id
     }
+
+    console.log('Datos de la tienda a crear:', tiendaData)
 
     // Subir logo si existe
     if (logoFile.value) {
@@ -232,11 +236,13 @@ const crearTienda = async () => {
     }
 
     // Crear tienda
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('shops')
-      .insert([tiendaData])
+      .insert(tiendaData)
       .select()
       .single()
+
+    console.log('Resultado de crear tienda:', { data, error })
 
     if (error) throw error
 

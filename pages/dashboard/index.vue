@@ -1,7 +1,7 @@
 <template>
   <div class="pa-4">
     <h1 class="text-h4 text-md-h3 mb-6">Dashboard</h1>
-    
+
     <v-row>
       <!-- Resumen de Estadísticas -->
       <v-col cols="6" sm="6" md="3" class="mb-4">
@@ -58,12 +58,8 @@
       <v-col cols="12" md="4" class="mb-4">
         <BaseCard title="Productos Populares">
           <v-list density="comfortable">
-            <v-list-item
-              v-for="producto in productosPopulares"
-              :key="producto.id"
-              :title="producto.nombre"
-              :subtitle="`${producto.ventas} ventas`"
-            >
+            <v-list-item v-for="producto in productosPopulares" :key="producto.id" :title="producto.nombre"
+              :subtitle="`${producto.ventas} ventas`">
               <template v-slot:prepend>
                 <v-avatar size="40">
                   <v-img :src="producto.imagen" />
@@ -113,6 +109,7 @@ interface Producto {
 }
 
 // Estados
+const tiendaActual = ref<Shop | null>(null)
 const estadisticas = ref({
   productos: 0,
   pedidosHoy: 0,
@@ -157,21 +154,31 @@ const validarYCrearUsuario = async () => {
   }
 
   // Verificar si el usuario tiene una tienda
-  const { data: shop } = await supabase
+  const { data: shops, error } = await supabase
     .from('shops')
     .select('*')
     .eq('user_id', user.id)
-    .single()
 
-  if (!shop) {
+  if (error) {
+    console.error('Error al obtener la tienda:', error)
     navigateTo('/dashboard/shop/create')
     return
   }
+
+  if (!shops || shops.length === 0) {
+    navigateTo('/dashboard/shop/create')
+    return
+  }
+
+  // Guardar la tienda actual
+  tiendaActual.value = shops[0]
 }
 
 // Métodos
 const cargarEstadisticas = async () => {
-  // Aquí irían las llamadas a Supabase para obtener las estadísticas reales
+  if (!tiendaActual.value) return
+
+  // Aquí irían las llamadas a Supabase para obtener las estadísticas reales de la tienda
   estadisticas.value = {
     productos: 24,
     pedidosHoy: 8,
@@ -181,7 +188,9 @@ const cargarEstadisticas = async () => {
 }
 
 const cargarPedidosRecientes = async () => {
-  // Simulación de datos
+  if (!tiendaActual.value) return
+
+  // Aquí iría la consulta real a Supabase para obtener los pedidos de la tienda
   pedidosRecientes.value = [
     { id: 1, producto: 'Producto 1', cliente: 'Juan Pérez', estado: 'pendiente', total: 99.99 },
     { id: 2, producto: 'Producto 2', cliente: 'María García', estado: 'completado', total: 149.99 },
@@ -190,7 +199,9 @@ const cargarPedidosRecientes = async () => {
 }
 
 const cargarProductosPopulares = async () => {
-  // Simulación de datos
+  if (!tiendaActual.value) return
+
+  // Aquí iría la consulta real a Supabase para obtener los productos populares de la tienda
   productosPopulares.value = [
     { id: 1, nombre: 'Producto 1', ventas: 45, imagen: '/producto1.jpg' },
     { id: 2, nombre: 'Producto 2', ventas: 38, imagen: '/producto2.jpg' },
@@ -219,4 +230,4 @@ definePageMeta({
   layout: 'dashboard',
   middleware: ['auth']
 })
-</script> 
+</script>
