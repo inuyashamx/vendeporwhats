@@ -29,7 +29,6 @@ VendePorWhats es una aplicación web mobile-first desarrollada con Nuxt.js que p
 
 - Node.js (versión 16 o superior)
 - npm, yarn, pnpm o bun
-- Cuenta de WhatsApp Business API
 
 ## Instalación
 
