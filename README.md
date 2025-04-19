@@ -56,7 +56,6 @@ bun install
 3. Configura las variables de entorno:
 Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
 ```
-WHATSAPP_API_KEY=tu_api_key
 DATABASE_URL=tu_url_de_base_de_datos
 ```
 
@@ -140,9 +139,3 @@ vendeporwhats/
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
-## Contacto
-
-[Tu Nombre] - [tu@email.com]
-
-Link del proyecto: [https://github.com/tu-usuario/vendeporwhats](https://github.com/tu-usuario/vendeporwhats)
