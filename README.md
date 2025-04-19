@@ -1,11 +1,45 @@
-# Nuxt Minimal Starter
+# VendePorWhats
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Sistema de ventas y gestión de WhatsApp para negocios.
 
-## Setup
+## Descripción
 
-Make sure to install dependencies:
+VendePorWhats es una aplicación web mobile-first desarrollada con Nuxt.js que permite a los negocios crear y compartir catálogos de productos a través de WhatsApp. Los clientes pueden realizar pedidos en línea de manera sencilla y rápida, mejorando la experiencia de compra y facilitando la gestión de ventas para los negocios.
 
+## Estado del Desarrollo
+
+### Características Implementadas ✅
+- Diseño mobile-first optimizado para dispositivos móviles
+- Catálogo de productos con imágenes y descripciones
+- Generación de links personalizados para compartir en WhatsApp
+- Sistema de pedidos en línea
+- Panel de administración para gestionar productos y pedidos
+- Seguimiento de pedidos en tiempo real
+- Gestión de inventario
+- Estadísticas de ventas
+
+### En Desarrollo 🚧
+- Notificaciones automáticas de nuevos pedidos
+- Mejoras en la interfaz de usuario
+- Optimización de rendimiento
+- Sistema de pagos en línea
+- Gestión de múltiples tiendas
+
+## Requisitos Previos
+
+- Node.js (versión 16 o superior)
+- npm, yarn, pnpm o bun
+- Cuenta de WhatsApp Business API
+
+## Instalación
+
+1. Clona el repositorio:
+```bash
+git clone [URL_DEL_REPOSITORIO]
+cd vendeporwhats
+```
+
+2. Instala las dependencias:
 ```bash
 # npm
 npm install
@@ -20,9 +54,16 @@ yarn install
 bun install
 ```
 
-## Development Server
+3. Configura las variables de entorno:
+Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+```
+WHATSAPP_API_KEY=tu_api_key
+DATABASE_URL=tu_url_de_base_de_datos
+```
 
-Start the development server on `http://localhost:3000`:
+## Desarrollo
+
+Para iniciar el servidor de desarrollo en `http://localhost:3000`:
 
 ```bash
 # npm
@@ -38,9 +79,9 @@ yarn dev
 bun run dev
 ```
 
-## Production
+## Producción
 
-Build the application for production:
+Para construir la aplicación para producción:
 
 ```bash
 # npm
@@ -56,7 +97,7 @@ yarn build
 bun run build
 ```
 
-Locally preview production build:
+Para previsualizar la versión de producción localmente:
 
 ```bash
 # npm
@@ -72,4 +113,37 @@ yarn preview
 bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Estructura del Proyecto
+
+```
+vendeporwhats/
+├── components/     # Componentes Vue reutilizables
+├── composables/    # Composables de Vue
+├── config/        # Archivos de configuración
+├── layouts/       # Layouts de la aplicación
+├── middleware/    # Middleware de Nuxt
+├── pages/         # Páginas de la aplicación
+├── plugins/       # Plugins de Nuxt
+├── public/        # Archivos estáticos
+├── server/        # Código del servidor
+├── types/         # Definiciones de tipos TypeScript
+└── utils/         # Utilidades y helpers
+```
+
+## Contribución
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+## Contacto
+
+[Tu Nombre] - [tu@email.com]
+
+Link del proyecto: [https://github.com/tu-usuario/vendeporwhats](https://github.com/tu-usuario/vendeporwhats)

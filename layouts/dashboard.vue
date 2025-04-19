@@ -15,12 +15,6 @@
           rounded="lg"
         />
         <v-list-item
-          prepend-icon="mdi-store"
-          title="Mi Tienda"
-          to="/dashboard/tienda"
-          rounded="lg"
-        />
-        <v-list-item
           prepend-icon="mdi-package-variant"
           title="Productos"
           to="/dashboard/productos"
@@ -91,11 +85,9 @@ const drawer = ref(false)
 const currentPageTitle = computed(() => {
   const titles: { [key: string]: string } = {
     '/dashboard': 'Dashboard',
-    '/dashboard/tienda': 'Mi Tienda',
     '/dashboard/productos': 'Productos',
     '/dashboard/pedidos': 'Pedidos',
-    '/dashboard/configuracion': 'Configuración',
-    '/dashboard/shop/create': 'Crear Tienda'
+    '/dashboard/configuracion': 'Configuración'
   }
   return titles[route.path] || 'Dashboard'
 })
